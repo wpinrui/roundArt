@@ -52,7 +52,7 @@ function circlePointCoords(container, index) {
 
 function drawDot(container, index, color = "black") {
   if (container.points.length < container.numOfPoints) {
-    coords = circlePointCoords(container, index);
+    const coords = circlePointCoords(container, index);
     const dot = container.space.makeCircle(
       coords.x,
       coords.y,
@@ -87,14 +87,22 @@ function resize(container, id, max = 450) {
   container.radius = (Math.min(container.width, container.height) - 32) / 2;
   container.lines = [];
   container.points = [];
-  document.getElementById(id).innerHTML = "";
   draw(container, id);
 }
 
+function getSpace(container, id) {
+  if (!container.space) {
+    const params = { width: container.width, height: container.height };
+    container.space = new Two(params).appendTo(document.getElementById(id));
+  } else {
+    container.space.renderer.setSize(container.width, container.height);
+    container.space.clear();
+  }
+  return container.space;
+}
+
 function draw(container, id) {
-  const elem = document.getElementById(id);
-  var params = { width: container.width, height: container.height };
-  container.space = new Two(params).appendTo(elem);
+  getSpace(container, id);
 
   // two has convenience methods to create shapes.
   var circle = container.space.makeCircle(
@@ -122,36 +130,31 @@ window.addEventListener("resize", () => {
 });
 
 function handleNumLines() {
-  const value = linesSlider.value;
+  const value = Number(linesSlider.value);
   document.getElementById(
     "num-lines-label"
-  ).innerHTML = `Number of lines: ${value}`;
+  ).textContent = `Number of lines: ${value}`;
   containers.main.numOfLines = value;
-
-  document.getElementById("draw-shapes").innerHTML = "";
   resize(containers.main, "draw-shapes");
 }
 
 function handleNumPoints() {
-  const value = pointsSlider.value;
+  const value = Number(pointsSlider.value);
   document.getElementById(
     "num-points-label"
-  ).innerHTML = `Number of points: ${value}`;
+  ).textContent = `Number of points: ${value}`;
   containers.main.numOfPoints = value;
-  document.getElementById("draw-shapes").innerHTML = "";
-  resize(containers.main, "draw-shapes");
   linesSlider.max = containers.main.numOfPoints;
   linesSlider.value = linesSlider.max;
   handleNumLines();
 }
 
 function handleMultiplier() {
-  const value = multiplierSlider.value;
+  const value = Number(multiplierSlider.value);
   document.getElementById(
     "multiplier-label"
-  ).innerHTML = `Multiplier: ${value}`;
+  ).textContent = `Multiplier: ${value}`;
   containers.main.multiplier = value;
-  document.getElementById("draw-shapes").innerHTML = "";
   resize(containers.main, "draw-shapes");
 }
 
@@ -177,16 +180,14 @@ function handleColor() {
 }
 
 // Download Button
-async function downloadSVG() {
-  document
-    .getElementsByTagName("svg")[1]
-    .setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  const svg = document.getElementById("draw-shapes").innerHTML;
-  const blob = new Blob([svg.toString()]);
-  const text = await blob.text();
+function downloadSVG() {
+  const svgElem = document.querySelector("#draw-shapes svg");
+  svgElem.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+  const blob = new Blob([svgElem.outerHTML], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(blob);
   const element = document.createElement("a");
   element.download = "RoundArt.svg";
-  element.href = window.URL.createObjectURL(blob);
+  element.href = url;
   element.click();
-  element.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
 }
