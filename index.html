@@ -11,71 +11,54 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" 
-     href="./favicon.ico">
+    <link rel="icon" href="./favicon.ico" />
     <title>RoundArt</title>
-    <script src="./Two.js"></script>
+    <script defer src="./Two.js"></script>
+    <script defer src="./scripts.js"></script>
   </head>
   <body>
     <div class="content">
       <h1>RoundArt</h1>
       <button class="collapsible">About</button>
       <div class="dropdown-content">
-        <p align="justify">
+        <p class="justify">
           In this app, we will be making art with a circle and lines. Picture a
           clock, with numbers from 1 to 12. If we draw a line from each number
           to two times of the previous number (e.g. 1 joins to 2, 2 joins to 4
           and so on, using modular arithmetic for larger numbers), it would look
           something like this:
-          <div id="sample"></div>
-          The shape looks interesting. But what if we add more points instead of just 12? And what if we use different multiples to determine which points should be joined? Can we use fractions? What patterns can we create? The sandbox is all yours. (Hint: use the arrow keys for finer control of the sliders!)</p>
-
-          <p>Made by Ivan Wong. Inspired by CS1101S. <br>2D Graphics Library: <a href="https://two.js.org/">Two.js</a><br>View the source code on <a href="https://github.com/wpinrui/roundArt">GitHub</a>.<hr></p>
-        
-        
+        </p>
+        <div id="sample"></div>
+        <p class="justify">
+          The shape looks interesting. But what if we add more points instead of just 12? And what if we use different multiples to determine which points should be joined? Can we use fractions? What patterns can we create? The sandbox is all yours. (Hint: use the arrow keys for finer control of the sliders!)
+        </p>
+        <p>Made by Ivan Wong. Inspired by CS1101S. <br>2D Graphics Library: <a href="https://two.js.org/">Two.js</a><br>View the source code on <a href="https://github.com/wpinrui/roundArt">GitHub</a>.</p>
+        <hr />
       </div>
 
-      <script>
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
-
-        for (i = 0; i < coll.length; i++) {
-          coll[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.maxHeight) {
-              content.style.maxHeight = null;
-            } else {
-              content.style.maxHeight = content.scrollHeight + "px";
-            }
-          });
-        }
-      </script>
       <div id="draw-shapes"></div>
-      <label id="num-points-label">Number of points: 20</label>
-      <input type="range" min="0" max="250" value="20" step="2" class="slider" id="num-points">
+      <label id="num-points-label" for="num-points">Number of points: 20</label>
+      <input type="range" min="2" max="250" value="20" step="1" class="slider" id="num-points">
       <div style="margin-bottom: 1em;"></div>
-      <label id="num-lines-label">Number of lines: 20</label>
+      <label id="num-lines-label" for="num-lines">Number of lines: 20</label>
       <input type="range" min="0" max="20" value="20" step="1" class="slider" id="num-lines">
       <div style="margin-bottom: 1em;"></div>
-      <label id="multiplier-label">Multiplier: 2</label>
+      <label id="multiplier-label" for="multiplier">Multiplier: 2</label>
       <input type="range" min="0.5" max="1000" value="2" step="0.5" class="slider" id="multiplier">
       <div style="margin-bottom: 1em;"></div>
-     <label for="colors">Choose a colour:</label>
-     <select name="colors" id="colors" onchange="handleColor()">
-      <option value="black">Black</option>
-       <option value="#b60000">Red</option>
-       <option value="#ff6c00">Orange</option>
-       <option value="#f4c229">Yellow</option>
-       <option value="#46b52d">Green</option>
-       <option value="#1339b5">Blue</option>
-       <option value="#3213b5">Indigo</option>
-       <option value="#8b26ac">Violet</option>
-     </select>
-      <script src="./scripts.js"></script>
+      <label for="colors">Choose a colour:</label>
+      <select name="colors" id="colors">
+        <option value="black">Black</option>
+        <option value="#b60000">Red</option>
+        <option value="#ff6c00">Orange</option>
+        <option value="#f4c229">Yellow</option>
+        <option value="#46b52d">Green</option>
+        <option value="#1339b5">Blue</option>
+        <option value="#3213b5">Indigo</option>
+        <option value="#8b26ac">Violet</option>
+      </select>
       <div style="margin-bottom: 1em;"></div>
-      <button onclick="downloadSVG()">Download</button>
+      <button id="download">Download</button>
     </div>
-    
   </body>
 </html>
