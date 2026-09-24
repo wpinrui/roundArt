@@ -98,7 +98,6 @@ function resize(container) {
     0,
     (Math.min(container.width, container.height) - 32) / 2
   );
-  // Shrink dots when there are many points so neighbours don't overlap
   const spacing = (2 * Math.PI * container.radius) / container.numOfPoints;
   container.dotRadius = Math.min(MAX_DOT_RADIUS, spacing * 0.3);
   container.lines = [];
@@ -106,8 +105,6 @@ function resize(container) {
   draw(container);
 }
 
-// Reuse one Two instance per container. Two.js keeps every instance in the
-// global Two.Instances array, so creating a new one per redraw leaks.
 function getSpace(container) {
   if (!container.space) {
     const params = { width: container.width, height: container.height };
@@ -202,15 +199,22 @@ function handleNumPoints() {
   if (linesAtMax) {
     linesSlider.value = value;
   }
+  const wrapped = containers.main.multiplier % value || value;
+  multiplierSlider.max = value;
+  multiplierSlider.value = wrapped;
+  setMultiplier(Number(multiplierSlider.value));
   handleNumLines();
 }
 
-function handleMultiplier() {
-  const value = Number(multiplierSlider.value);
+function setMultiplier(value) {
   document.getElementById(
     "multiplier-label"
   ).textContent = `Multiplier: ${value}`;
   containers.main.multiplier = value;
+}
+
+function handleMultiplier() {
+  setMultiplier(Number(multiplierSlider.value));
   resize(containers.main);
 }
 
